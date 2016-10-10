@@ -4,8 +4,6 @@ exports.up = function(knex, Promise) {
     table.increments()
     table.string('googleID')
     table.string('name')
-    table.string('first_name')
-    table.string('last_name')
     table.text('photo')
     table.string('email')
     table.string('token')
