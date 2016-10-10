@@ -1,3 +1,4 @@
+This is a walk-thru to setup google auth using passport, express, postgres, and knex. 
 ```bash
 >mkdir oauthTutorial
 >cd oauthTutorial
@@ -301,4 +302,4 @@ router.get('/welcome', auth.ensureAuthenticated,  function(req, res, next) {
 
 - Getting it on heroku isn't too hard. You just need to add the google codes from your dotenv file to heroku. I can't remember the command so that's why im not adding it. I think that you can add them from your heroku dashboard as well.
 
-- Lastly, you need to add your heroku url to your google developers console in the same place and format as your localhost urls. 
+- Lastly, you need to add your heroku url to your google developers console in the same place and format as your localhost urls.
