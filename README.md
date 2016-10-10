@@ -1,4 +1,4 @@
-This is a walk-thru to setup google auth using passport, express, postgres, and knex. 
+This is a walk-thru to setup google auth using passport, express, postgres, and knex.
 ```bash
 >mkdir oauthTutorial
 >cd oauthTutorial
@@ -60,7 +60,7 @@ exports.down = function(knex, Promise) {
 > git add .
 > git commit -m "added users table to local db"
 ```
-- So now our table is just hosted locally. Before we go to far let's add our project to heroku and setup the config for that.
+- So now our table is just hosted locally. Before we go too far let's add our project to heroku and setup the config for that.
 ```bash
 > heroku [name of application]  // the name here is what will appear in the URL bar ex https://www.your-app-name-here.herokuapp.com
 > heroku addons:create heroku-postgresql:hobby-dev
