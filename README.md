@@ -324,7 +324,7 @@ GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
 ```
 callbackURL: process.env.GOOGLE_CALLBACK_URL,
 ```
--Now we just have to tell heroku how to handle that callbackURL
+-Now heroku needs to know what to do with that callback url but it's different than how we defined it in out .env file. So add the following: 
 ```
 heroku config:set GOOGLE_CALLBACK_URL=https://your-app-name-here.herokuapp.com/auth/google/callback
 ```
