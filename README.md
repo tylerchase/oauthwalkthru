@@ -328,3 +328,4 @@ callbackURL: process.env.GOOGLE_CALLBACK_URL,
 ```
 heroku config:set GOOGLE_CALLBACK_URL=https://your-app-name-here.herokuapp.com/auth/google/callback
 ```
+- do all of your git stuff and push to git and heroku
