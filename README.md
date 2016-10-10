@@ -300,6 +300,31 @@ router.get('/welcome', auth.ensureAuthenticated,  function(req, res, next) {
 - in that welcome.hbs file add ```<h2> Welcome {{user.name}}</h2>```
 - now run nodemon and see if it works :)
 
-- Getting it on heroku isn't too hard. You just need to add the google codes from your dotenv file to heroku. I can't remember the command so that's why im not adding it. I think that you can add them from your heroku dashboard as well.
+- Now we need to add our items from our .env file to heroku
+```bash
+>heroku config:set GOOGLE_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
+>heroku config:set GOOGLE_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxx
+```
 
-- Lastly, you need to add your heroku url to your google developers console in the same place and format as your localhost urls.
+- Lastly, you need to add your heroku url to your google developers console in the same place and format as your localhost urls. for example
+
+```
+http://localhost:3000
+https://your-app-name-here.herokuapp.com
+
+http://localhost:3000/auth/google/callback
+https://your-app-name-here.herokuapp.com/auth/google/callback
+```
+
+- Now we just need to change one more thing. In our .env file add the local redirect url
+```
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
+```
+- now in your passport.js file change the callbackURL to
+```
+callbackURL: process.env.GOOGLE_CALLBACK_URL,
+```
+-Now we just have to tell heroku how to handle that callbackURL
+```
+heroku config:set GOOGLE_CALLBACK_URL=https://your-app-name-here.herokuapp.com/auth/google/callback
+```
