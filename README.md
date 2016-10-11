@@ -7,27 +7,30 @@ This is a walk-thru to setup google auth using passport, express, postgres, and 
 >npm install knex pg --save
 >knex init
 
+```
+- Create a repo on github
+```bash
 >git init
 >git add .
 >git commit -m "created express project with handlebars and added knex and postgres"
->git remote add origin "the link to the repo that you created on github"
+>git remote add origin <the link to the repo that you created on github>
 >git push origin master
 
->createdb [name of database] // we will call it 'oauthTutorial' for this project
-
+>createdb oauthTutorial
+> atom .
 ```
 - Change client and connection in the knexfile.js
 ```javascript
       development: {
         client: 'postgres',
         connection: {
-          database: name of database created earlier wrapped in quotes // ex = : 'oauthTutorial'
+          database: 'oauthTutorial'
         }
       },
 ```
 - Remove the staging object from the knexfile.js
 ```bash
-> knex migrate:make [name of table] // we will call it 'users'
+> knex migrate:make users
 ```
 - Now from the migrations folder find the migration file that you just made
 - Add the table info (example below)
@@ -35,7 +38,7 @@ This is a walk-thru to setup google auth using passport, express, postgres, and 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('users', function(table){
     table.increments()
-    table.string('googleID')
+    table.string('googleID') // in database form change it to google_id
     table.string('name')
     table.text('photo')
     table.string('email')
@@ -62,7 +65,7 @@ exports.down = function(knex, Promise) {
 ```
 - So now our table is just hosted locally. Before we go too far let's add our project to heroku and setup the config for that.
 ```bash
-> heroku [name of application]  // the name here is what will appear in the URL bar ex https://www.your-app-name-here.herokuapp.com
+> heroku create [name of application]  // the name here is what will appear in the URL bar ex https://www.your-app-name-here.herokuapp.com
 > heroku addons:create heroku-postgresql:hobby-dev
 > heroku config
 ```
@@ -78,13 +81,13 @@ example :
 DATABASE_URL = postgres://blahblahblah:.........83-28.compute-1.amazonaws.com:5432/d8pr5444mns72?ssl=true
 ```
 - make sure it is all on one line (sometimes it adds spaces in the address)
-- Let's add ```.env``` and ```node_modules``` to our .gitignore
+- Let's add `.env` to our .gitignore
 - now let's add that to our knexfile.js so our application knows where the production database is
 - first we need to install dotenv
 ```bash
 > npm install dotenv --save
 ```
-- Add ```javascript "var dotenv = require('dotenv').config()" ```to the top of the knexfile.js file
+- Add ` require('dotenv').config() `to the top of the knexfile.js file
 - In the production object in your knexfile.js set ```connection: process.env.DATABASE_URL,```
 - So now let's push our users table to our database on heroku
 ```bash
@@ -104,17 +107,39 @@ DATABASE_URL = postgres://blahblahblah:.........83-28.compute-1.amazonaws.com:54
  > mkdir db
  > touch db/knex_config.js
 ```
-- Now let's setup our knex config file that we just created. This file will tell knex which database to connect to.
+- Now let's setup our `knex_config.js` file that we just created. This file will tell knex which database to connect to.
 ```javascript
 'use strict'
  const knex = require('knex')
  const config = require('../knexfile.js');
  const env = process.env.NODE_ENV || 'development'
 
- let pg = knex(config[env]);
+module.exports = knex(config[env]);
+ ```
 
- module.exports = pg
+ -Let's make a query file where we can write our queries.
+ ```bash
+ >touch db/query.js
+ ```
+ -In the query.js file let's require in knex and write a few queries to export.
+ ```javascript
+ var knex = require('./knex_config.js')
 
+ var Users = function(){
+   return knex('users')
+ }
+
+ module.exports = {
+   getAllUsers : function(){
+     return Users();
+   },
+   getAllUsersByIdAndGoogleProfileId : function(profile){
+     return Users().where('googleID', profile.id).first()
+   },   
+   getUserById: function(profile){
+       return Users().where('id', profile.id).first()
+     }
+ }
  ```
  - On the routes/index.js file let's bring in our queries ```var query = require('../db/query.js')```
  - at the top of the routes/index.js file let's add ``` 'use strict' ``` to make heroku happy
@@ -161,30 +186,6 @@ GOOGLE_CLIENT_ID = xxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET = blahblahblahblahblah
 ```
 
--Let's make a query file where we can write our queries.
-```bash
->touch db/query.js
-```
--In the query.js file let's require in knex and write a few queries to export.
-```javascript
-var knex = require('./knex_config.js')
-
-var Users = function(){
-  return knex('users')
-}
-
-module.exports = {
-  getAllUsers : function(){
-    return Users();
-  },
-  getAllUsersByIdAndGoogleProfileId : function(profile){
-    return Users().where('googleID', profile.id).first()
-  },   
-  getUserById: function(profile){
-      return Users().where('id', profile.id).first()
-    }
-}
-```
 
 - Now let's create a file where we have our passport auth from the root directory
 ```bash
