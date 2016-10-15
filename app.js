@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  secret : "keyboardcat",
+  secret : "keyboardcat1", // this should be stored in the .env file
   saveUninitialized: true,
   resave: false
 }))
@@ -35,7 +35,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/users', users); // should put auth.ensureAuthenticated here before users // this will run auth.ensureAuthenticated before every route in users.js
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

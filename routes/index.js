@@ -26,7 +26,7 @@ router.get('/auth/google/callback', auth.passport.authenticate('google', {
 );
 
 router.get('/welcome', auth.ensureAuthenticated,  function(req, res, next) {
-  query.getUserById(req.user)
+  query.getAllUsersByIdAndGoogleProfileId(req.user.googleID)
   .then((userdata) => {
     res.render('welcome', {user: userdata})
   })

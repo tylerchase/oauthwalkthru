@@ -8,8 +8,8 @@ module.exports = {
   getAllUsers : function(){
     return Users();
   },
-  getAllUsersByIdAndGoogleProfileId : function(profile){
-    return Users().where('googleID', profile.id).first()
+  getAllUsersByIdAndGoogleProfileId : function(google_id){
+    return Users().where('googleID', google_id).first()
   },
   getUserById: function(profile){
     return Users().where('id', profile.id).first()

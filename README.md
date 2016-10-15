@@ -1,4 +1,12 @@
-This is a walk-thru to setup google auth using passport, express, postgres, and knex.
+This is a walk-thru to setup google auth using passport, express, postgres(pg), and knex.
+
+If you don't have any of those installed you should run those installations now.
+
+```bash
+npm install -g express-generator pg knex
+```
+Now let's create our application.
+
 ```bash
 >mkdir oauthTutorial
 >cd oauthTutorial
@@ -136,9 +144,6 @@ module.exports = knex(config[env]);
    getAllUsersByIdAndGoogleProfileId : function(profile){
      return Users().where('googleID', profile.id).first()
    },   
-   getUserById: function(profile){
-       return Users().where('id', profile.id).first()
-     }
  }
  ```
  - On the routes/index.js file let's bring in our queries ```var query = require('../db/query.js')```
@@ -215,11 +220,11 @@ now we can add the googleAuth stuff under the serialize data
 passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/auth/google/callback", // this has to match with what you entered in the google developers console. This is the url that google will redirect you to after the auth is finished.
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
         passReqToCallback: true
     },
     function(request, accessToken, refreshToken, profile, done) {
-      queries.getAllUsersByIdAndGoogleProfileId(profile)
+      queries.getAllUsersByIdAndGoogleProfileId(profile.id)
             .then(function(user) {
                 if (user) {
                     //console.log('It worked and didnt add a new user')
@@ -236,7 +241,6 @@ passport.use(new GoogleStrategy({
                         .then((users) => {
                             return done (null, users[0])
                         })
-
                 }
             })
 

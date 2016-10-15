@@ -19,7 +19,7 @@ passport.use(new GoogleStrategy({
         passReqToCallback: true
     },
     function(request, accessToken, refreshToken, profile, done) {
-      queries.getAllUsersByIdAndGoogleProfileId(profile)
+      queries.getAllUsersByIdAndGoogleProfileId(profile.id)
             .then(function(user) {
                 if (user) {
                     //console.log('It worked and didnt add a new user')
